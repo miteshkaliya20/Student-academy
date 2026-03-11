@@ -1,0 +1,34 @@
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const connectDB = require("./config/db");
+const { protect } = require("./middleware/authMiddleware");
+const { seedDefaultUsers } = require("./controllers/authController");
+
+dotenv.config();
+
+const app = express();
+app.use(cors());
+app.use(express.json({ limit: "5mb" }));
+
+app.get("/api/health", (_req, res) => {
+  res.json({ ok: true });
+});
+
+app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/students", protect, require("./routes/studentRoutes"));
+app.use("/api/courses", protect, require("./routes/courseRoutes"));
+app.use("/api/batches", protect, require("./routes/batchRoutes"));
+app.use("/api/fees", protect, require("./routes/feeRoutes"));
+app.use("/api/exams", protect, require("./routes/examRoutes"));
+app.use("/api/dashboard", protect, require("./routes/dashboardRoutes"));
+
+const PORT = process.env.PORT || 5000;
+
+(async function startServer() {
+  await connectDB();
+  await seedDefaultUsers();
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+})();
