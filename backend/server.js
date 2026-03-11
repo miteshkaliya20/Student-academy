@@ -1,11 +1,12 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const path = require("path");
 const connectDB = require("./config/db");
 const { protect } = require("./middleware/authMiddleware");
 const { seedDefaultUsers } = require("./controllers/authController");
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, ".env") });
 
 const app = express();
 app.use(cors());
@@ -23,7 +24,7 @@ app.use("/api/fees", protect, require("./routes/feeRoutes"));
 app.use("/api/exams", protect, require("./routes/examRoutes"));
 app.use("/api/dashboard", protect, require("./routes/dashboardRoutes"));
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 (async function startServer() {
   await connectDB();

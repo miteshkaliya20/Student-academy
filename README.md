@@ -59,7 +59,7 @@ cp .env.example .env
 3. Update `backend/.env`
 
 ```env
-PORT=5000
+PORT=5001
 MONGO_URI=mongodb://127.0.0.1:27017/student_academy
 JWT_SECRET=change_this_secret
 ```
@@ -77,7 +77,7 @@ npm run dev:server
 npm run dev
 ```
 
-Frontend runs on `http://localhost:5173` and uses backend API at `http://localhost:5000/api`.
+Frontend runs on `http://localhost:5173` and uses backend API at `http://localhost:5001/api`.
 
 ## Backend API Endpoints
 
