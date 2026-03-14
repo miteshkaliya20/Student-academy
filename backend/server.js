@@ -11,12 +11,14 @@ dotenv.config({ path: path.join(__dirname, ".env") });
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: "5mb" }));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true });
 });
 
 app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/admissions", require("./routes/admissionRoutes"));
 app.use("/api/students", protect, require("./routes/studentRoutes"));
 app.use("/api/courses", protect, require("./routes/courseRoutes"));
 app.use("/api/batches", protect, require("./routes/batchRoutes"));
