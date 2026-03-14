@@ -115,6 +115,7 @@ async function convertAdmissionToStudent(req, res) {
     mobile: admission.phone,
     email: admission.email,
     photo: admission.profilePic,
+    password: admission.phone,
     examType: "GPSC",
   });
 

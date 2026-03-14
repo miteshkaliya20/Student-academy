@@ -24,4 +24,18 @@ function adminOnly(req, res, next) {
   return next();
 }
 
-module.exports = { protect, adminOnly };
+function studentOnly(req, res, next) {
+  if (req.user?.role !== "Student") {
+    return res.status(403).json({ message: "Student access required" });
+  }
+  return next();
+}
+
+function staffOrAdminOnly(req, res, next) {
+  if (req.user?.role !== "Admin" && req.user?.role !== "Staff") {
+    return res.status(403).json({ message: "Staff or Admin access required" });
+  }
+  return next();
+}
+
+module.exports = { protect, adminOnly, studentOnly, staffOrAdminOnly };
