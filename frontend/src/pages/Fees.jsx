@@ -1,5 +1,14 @@
 import { useMemo, useState } from 'react';
 import { useAcademy } from '../hooks/useAcademy';
+import './Fees.scss';
+
+function formatCurrency(amount) {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0,
+  }).format(Number(amount || 0));
+}
 
 export default function Fees() {
   const { students, courses, feePayments, addFeePayment } = useAcademy();
@@ -21,6 +30,13 @@ export default function Fees() {
     });
   }, [students, courses, feePayments]);
 
+  const feeSummary = useMemo(() => {
+    const totalDue = dues.reduce((sum, item) => sum + item.totalFee, 0);
+    const totalPaid = dues.reduce((sum, item) => sum + item.paid, 0);
+    const totalPending = dues.reduce((sum, item) => sum + item.pending, 0);
+    return { totalDue, totalPaid, totalPending };
+  }, [dues]);
+
   async function submit(event) {
     event.preventDefault();
     if (!form.studentId || !form.amount || !form.paidOn) {
@@ -41,10 +57,30 @@ export default function Fees() {
   }
 
   return (
-    <div className="page-stack">
-      <h2>Fees Management</h2>
+    <div className="page-stack section-page-modern">
+      <section className="panel section-hero fees-hero">
+        <div>
+          <h2>Fees Management</h2>
+          <p>Track collections, record payments, and monitor pending dues in one workspace.</p>
+        </div>
+      </section>
 
-      <section className="panel">
+      <section className="section-metric-grid">
+        <article className="panel section-metric-card">
+          <p>Total Fee Target</p>
+          <h3>{formatCurrency(feeSummary.totalDue)}</h3>
+        </article>
+        <article className="panel section-metric-card">
+          <p>Total Collected</p>
+          <h3>{formatCurrency(feeSummary.totalPaid)}</h3>
+        </article>
+        <article className="panel section-metric-card">
+          <p>Total Pending</p>
+          <h3>{formatCurrency(feeSummary.totalPending)}</h3>
+        </article>
+      </section>
+
+      <section className="panel section-panel">
         <h3>Collect Payment</h3>
         <form className="form-grid three-col" onSubmit={submit}>
           <label>
@@ -85,7 +121,7 @@ export default function Fees() {
         </form>
       </section>
 
-      <section className="panel">
+      <section className="panel section-panel">
         <h3>Pending Fees Tracker</h3>
         <div className="table-wrap">
           <table>

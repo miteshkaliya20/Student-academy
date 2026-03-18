@@ -1,0 +1,27 @@
+.student-form-panel {
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.student-form-note {
+  margin-top: 0.25rem;
+}
+
+.student-form-grid {
+  margin-top: 0.5rem;
+}
+
+.student-form-grid label {
+  font-weight: 600;
+  color: #334155;
+}
+
+.student-form-grid label .error-msg {
+  margin-top: 0.2rem;
+}
+
+.input-error {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.12);
+}

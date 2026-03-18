@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useAcademy } from '../hooks/useAcademy';
+import './Exams.scss';
 
 export default function Exams() {
   const { students, examRecords, addExamRecord } = useAcademy();
@@ -16,6 +17,20 @@ export default function Exams() {
     () => Object.fromEntries(students.map((student) => [student.id, student.fullName])),
     [students]
   );
+
+  const examSummary = useMemo(() => {
+    const total = examRecords.length;
+    const presentCount = examRecords.filter((record) => record.attendance === 'Present').length;
+    const avgScore = total
+      ? Math.round(examRecords.reduce((sum, record) => sum + Number(record.score || 0), 0) / total)
+      : 0;
+
+    return {
+      total,
+      presentCount,
+      avgScore,
+    };
+  }, [examRecords]);
 
   async function submit(event) {
     event.preventDefault();
@@ -36,10 +51,30 @@ export default function Exams() {
   }
 
   return (
-    <div className="page-stack">
-      <h2>Exam Tracking</h2>
+    <div className="page-stack section-page-modern">
+      <section className="panel section-hero exams-hero">
+        <div>
+          <h2>Exam Tracking</h2>
+          <p>Capture mock tests, monitor attendance, and maintain performance history.</p>
+        </div>
+      </section>
 
-      <section className="panel">
+      <section className="section-metric-grid">
+        <article className="panel section-metric-card">
+          <p>Total Records</p>
+          <h3>{examSummary.total}</h3>
+        </article>
+        <article className="panel section-metric-card">
+          <p>Present Marked</p>
+          <h3>{examSummary.presentCount}</h3>
+        </article>
+        <article className="panel section-metric-card">
+          <p>Average Score</p>
+          <h3>{examSummary.avgScore}</h3>
+        </article>
+      </section>
+
+      <section className="panel section-panel">
         <h3>Add Mock Test / Attendance</h3>
         <form className="form-grid three-col" onSubmit={submit}>
           <label>
@@ -104,7 +139,7 @@ export default function Exams() {
         </form>
       </section>
 
-      <section className="panel">
+      <section className="panel section-panel">
         <h3>Performance Report</h3>
         <div className="table-wrap">
           <table>

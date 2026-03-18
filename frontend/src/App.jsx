@@ -1,5 +1,5 @@
 import { BrowserRouter, Link, Navigate, NavLink, Outlet, Route, Routes } from 'react-router-dom';
-import './App.css';
+import './App.scss';
 import Dashboard from './pages/Dashboard';
 import Students from './pages/Students';
 import AddStudent from './pages/AddStudent';
@@ -16,12 +16,12 @@ import { AcademyProvider } from './context/AcademyContext';
 import { useAuth } from './hooks/useAuth';
 
 const navItems = [
-  { label: 'Dashboard', path: '/dashboard' },
-  { label: 'Students', path: '/students' },
-  { label: 'Batches', path: '/batches' },
-  { label: 'Fees', path: '/fees' },
-  { label: 'Exams', path: '/exams' },
-  { label: 'Admissions', path: '/admissions', adminOnly: true },
+  { label: 'Dashboard', path: '/dashboard', tag: 'DB' },
+  { label: 'Students', path: '/students', tag: 'ST' },
+  { label: 'Batches', path: '/batches', tag: 'BT' },
+  { label: 'Fees', path: '/fees', tag: 'FE' },
+  { label: 'Exams', path: '/exams', tag: 'EX' },
+  { label: 'Admissions', path: '/admissions', adminOnly: true, tag: 'AD' },
 ];
 
 function Layout() {
@@ -35,11 +35,18 @@ function Layout() {
   return (
     <div className="layout">
       <aside className="sidebar">
-        <Link to="/dashboard" className="brand-link">
-          <h1>Parivartan Academy</h1>
-        </Link>
-        <p>{user.name}</p>
-        <p className="muted">Role: {user.role}</p>
+        <div className="sidebar-top">
+          <Link to="/dashboard" className="brand-link">
+            <h1>Parivartan Academy</h1>
+          </Link>
+          <p className="sidebar-subtitle">Admin & Student Operations</p>
+        </div>
+
+        <section className="sidebar-user-card">
+          <p className="sidebar-user-name">{user.name}</p>
+          <p className="sidebar-user-role">Role: {user.role}</p>
+        </section>
+
         <nav>
           {navItems
             .filter((item) => !item.adminOnly || isAdmin)
@@ -49,7 +56,8 @@ function Layout() {
                 className={({ isActive }) => `nav-btn ${isActive ? 'active' : ''}`}
                 to={item.path}
               >
-                {item.label}
+                <span className="nav-btn-tag">{item.tag}</span>
+                <span>{item.label}</span>
               </NavLink>
             ))}
         </nav>
@@ -58,7 +66,9 @@ function Layout() {
         </button>
       </aside>
       <section className="content">
-        <Outlet />
+        <div className="content-shell">
+          <Outlet />
+        </div>
       </section>
     </div>
   );

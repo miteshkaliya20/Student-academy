@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import api, { API_BASE_URL } from '../api/api';
+import './Admissions.scss';
 
 const STATUS_OPTIONS = ['Pending', 'Reviewed', 'Approved', 'Rejected'];
 
@@ -45,6 +46,14 @@ export default function Admissions() {
   }, [admissions, searchText, statusFilter]);
 
   const hasRows = useMemo(() => filteredAdmissions.length > 0, [filteredAdmissions.length]);
+
+  const admissionSummary = useMemo(() => {
+    return {
+      total: admissions.length,
+      approved: admissions.filter((item) => item.status === 'Approved').length,
+      converted: admissions.filter((item) => item.convertedStudent).length,
+    };
+  }, [admissions]);
 
   async function loadAdmissions() {
     setLoading(true);
@@ -99,15 +108,34 @@ export default function Admissions() {
   }
 
   return (
-    <div className="page-stack">
-      <div className="page-head">
-        <h2>Admission Requests</h2>
+    <div className="page-stack section-page-modern">
+      <section className="panel section-hero admissions-hero">
+        <div>
+          <h2>Admission Requests</h2>
+          <p>Review applications, update status, and convert approved admissions to students.</p>
+        </div>
         <button className="btn secondary" onClick={loadAdmissions} disabled={loading}>
           {loading ? 'Refreshing...' : 'Refresh'}
         </button>
-      </div>
+      </section>
 
-      <div className="filters-row">
+      <section className="section-metric-grid">
+        <article className="panel section-metric-card">
+          <p>Total Requests</p>
+          <h3>{admissionSummary.total}</h3>
+        </article>
+        <article className="panel section-metric-card">
+          <p>Approved</p>
+          <h3>{admissionSummary.approved}</h3>
+        </article>
+        <article className="panel section-metric-card">
+          <p>Converted</p>
+          <h3>{admissionSummary.converted}</h3>
+        </article>
+      </section>
+
+      <section className="panel section-panel section-filter-panel">
+        <div className="filters-row">
         <input
           className="search"
           placeholder="Search by name, email, or phone"
@@ -122,11 +150,12 @@ export default function Admissions() {
             </option>
           ))}
         </select>
-      </div>
+        </div>
+      </section>
 
       {error ? <div className="error-msg">{error}</div> : null}
 
-      <section className="panel table-wrap">
+      <section className="panel section-panel table-wrap">
         <table>
           <thead>
             <tr>

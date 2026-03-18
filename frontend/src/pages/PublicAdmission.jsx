@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/api';
+import './PublicAdmission.scss';
 
 const NAME_REGEX = /^[A-Za-z]{2,}$/;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -133,69 +134,136 @@ export default function PublicAdmission() {
   }
 
   return (
-    <div className="login-shell">
-      <section className="login-card admission-card">
-        <h1>Public Admission Form</h1>
-        <p>Fill in all details to submit your admission request.</p>
+    <div className="login-shell student-admission-shell">
+      <section className="student-admission-grid">
+        <article className="student-admission-info-card">
+          <span className="student-admission-badge">Student Admission</span>
+          <h1>Start Your Journey With Parivartan Academy</h1>
+          <p>
+            Fill this form to request admission. Our team reviews every submission and contacts you with the next
+            steps.
+          </p>
 
-        <form onSubmit={handleSubmit} className="form-grid two-col">
-          <label>
-            First Name
-            <input name="firstName" value={form.firstName} onChange={handleChange} />
-            {errors.firstName ? <span className="error-msg">{errors.firstName}</span> : null}
-          </label>
-
-          <label>
-            Last Name
-            <input name="lastName" value={form.lastName} onChange={handleChange} />
-            {errors.lastName ? <span className="error-msg">{errors.lastName}</span> : null}
-          </label>
-
-          <label>
-            Email
-            <input name="email" type="email" value={form.email} onChange={handleChange} />
-            {errors.email ? <span className="error-msg">{errors.email}</span> : null}
-          </label>
-
-          <label>
-            Phone Number
-            <input name="phone" value={form.phone} onChange={handleChange} maxLength={10} />
-            {errors.phone ? <span className="error-msg">{errors.phone}</span> : null}
-          </label>
-
-          <label>
-            Profile Picture (JPG, JPEG, PNG)
-            <input
-              name="profilePic"
-              type="file"
-              accept="image/png,image/jpeg,image/jpg"
-              onChange={handleFileChange}
-            />
-            {errors.profilePic ? <span className="error-msg">{errors.profilePic}</span> : null}
-          </label>
-
-          <label>
-            ID Proof (JPG, JPEG, PNG, PDF)
-            <input
-              name="idProof"
-              type="file"
-              accept="image/png,image/jpeg,image/jpg,application/pdf"
-              onChange={handleFileChange}
-            />
-            {errors.idProof ? <span className="error-msg">{errors.idProof}</span> : null}
-          </label>
-
-          <div className="actions span-all">
-            <button className="btn" type="submit" disabled={loading}>
-              {loading ? 'Submitting...' : 'Submit Admission Form'}
-            </button>
-            <Link className="btn secondary" to="/login">
-              Back to Login
-            </Link>
+          <div className="student-admission-kpi-row">
+            <div>
+              <strong>Fast</strong>
+              <span>Application Review</span>
+            </div>
+            <div>
+              <strong>Clear</strong>
+              <span>Document Process</span>
+            </div>
+            <div>
+              <strong>Mentor</strong>
+              <span>Guided Onboarding</span>
+            </div>
           </div>
-        </form>
 
-        {submitMessage ? <p className="admission-submit-msg">{submitMessage}</p> : null}
+          <div className="student-admission-steps">
+            <div>
+              <strong>1. Fill Details</strong>
+              <span>Enter accurate student contact information.</span>
+            </div>
+            <div>
+              <strong>2. Upload Documents</strong>
+              <span>Add photo and valid ID proof in supported format.</span>
+            </div>
+            <div>
+              <strong>3. Submit Request</strong>
+              <span>Receive confirmation and follow-up from academy staff.</span>
+            </div>
+          </div>
+        </article>
+
+        <article className="login-card admission-card student-admission-form-card">
+          <div className="student-admission-form-top">
+            <h2>Student Admission Form</h2>
+            <p>All fields are mandatory for faster processing.</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="form-grid two-col student-admission-form-grid">
+            <label>
+              First Name
+              <input
+                name="firstName"
+                placeholder="Enter first name"
+                value={form.firstName}
+                onChange={handleChange}
+              />
+              {errors.firstName ? <span className="error-msg">{errors.firstName}</span> : null}
+            </label>
+
+            <label>
+              Last Name
+              <input
+                name="lastName"
+                placeholder="Enter last name"
+                value={form.lastName}
+                onChange={handleChange}
+              />
+              {errors.lastName ? <span className="error-msg">{errors.lastName}</span> : null}
+            </label>
+
+            <label>
+              Email
+              <input
+                name="email"
+                type="email"
+                placeholder="name@example.com"
+                value={form.email}
+                onChange={handleChange}
+              />
+              {errors.email ? <span className="error-msg">{errors.email}</span> : null}
+            </label>
+
+            <label>
+              Phone Number
+              <input
+                name="phone"
+                placeholder="10-digit mobile number"
+                value={form.phone}
+                onChange={handleChange}
+                maxLength={10}
+              />
+              {errors.phone ? <span className="error-msg">{errors.phone}</span> : null}
+            </label>
+
+            <label>
+              Profile Picture (JPG, JPEG, PNG)
+              <input
+                name="profilePic"
+                type="file"
+                accept="image/png,image/jpeg,image/jpg"
+                onChange={handleFileChange}
+              />
+              <span className="muted">{form.profilePic?.name || 'No file selected'}</span>
+              {errors.profilePic ? <span className="error-msg">{errors.profilePic}</span> : null}
+            </label>
+
+            <label>
+              ID Proof (JPG, JPEG, PNG, PDF)
+              <input
+                name="idProof"
+                type="file"
+                accept="image/png,image/jpeg,image/jpg,application/pdf"
+                onChange={handleFileChange}
+              />
+              <span className="muted">{form.idProof?.name || 'No file selected'}</span>
+              {errors.idProof ? <span className="error-msg">{errors.idProof}</span> : null}
+            </label>
+
+            <div className="actions span-all">
+              <button className="btn" type="submit" disabled={loading}>
+                {loading ? 'Submitting...' : 'Submit Student Admission'}
+              </button>
+              <Link className="btn secondary" to="/login">
+                Back to Login
+              </Link>
+            </div>
+          </form>
+
+          {submitMessage ? <p className="admission-submit-msg">{submitMessage}</p> : null}
+        </article>
       </section>
     </div>
   );

@@ -4,6 +4,7 @@ import studentApi, {
   STUDENT_TOKEN_STORAGE_KEY,
   STUDENT_USER_STORAGE_KEY,
 } from '../api/studentApi';
+import './StudentPortal.scss';
 
 function formatDateTime(value) {
   if (!value) {
@@ -237,13 +238,16 @@ export default function StudentPortal() {
     setStudentUser(null);
   }
 
+  const activeExamTotalQuestions = activeExam?.questions?.length || 0;
+  const answeredCount = answers.filter((value) => value >= 0).length;
+
   if (!hasToken || !studentUser) {
     return <Navigate to="/student/login" replace />;
   }
 
   return (
-    <div className="page-stack student-portal">
-      <section className="student-portal-hero">
+    <div className="page-stack student-portal student-portal-modern">
+      <section className="student-portal-hero student-portal-hero-modern">
         <div className="student-hero-left">
           {profile?.photo ? (
             <img src={profile.photo} alt={studentUser.name} className="student-hero-avatar" />
@@ -251,22 +255,38 @@ export default function StudentPortal() {
             <div className="student-hero-avatar placeholder">{getInitials(studentUser.name)}</div>
           )}
           <div className="student-hero-text">
-            <h2>Student Portal</h2>
-            <p>{studentUser.name}</p>
+            <span className="student-hero-pill">Live Learning Hub</span>
+            <h2>Welcome back, {studentUser.name}</h2>
             <p>{studentUser.email || '-'}</p>
           </div>
         </div>
 
-        <button className="btn secondary" onClick={logoutStudent}>
-          Logout
-        </button>
+        <div className="student-hero-actions">
+          <div className="student-hero-metrics">
+            <div>
+              <span>Teachers</span>
+              <strong>{teachers.length}</strong>
+            </div>
+            <div>
+              <span>Upcoming Exams</span>
+              <strong>{upcomingExams.length}</strong>
+            </div>
+            <div>
+              <span>Attempts</span>
+              <strong>{myAttempts.length}</strong>
+            </div>
+          </div>
+          <button className="btn secondary" onClick={logoutStudent}>
+            Logout
+          </button>
+        </div>
       </section>
 
-      {error ? <div className="error-msg">{error}</div> : null}
-      {resultMessage ? <div className="admission-submit-msg">{resultMessage}</div> : null}
+      {error ? <div className="portal-alert error-msg">{error}</div> : null}
+      {resultMessage ? <div className="portal-alert admission-submit-msg">{resultMessage}</div> : null}
 
-      <section className="split-grid">
-        <div className="panel">
+      <section className="split-grid student-profile-grid">
+        <div className="panel student-portal-card">
           <h3>My Profile</h3>
           {profile ? <p className="muted">Email: {profile.email || '-'}</p> : null}
           <form className="form-grid single-col" onSubmit={saveProfile}>
@@ -298,7 +318,7 @@ export default function StudentPortal() {
           </form>
         </div>
 
-        <div className="panel">
+        <div className="panel student-portal-card">
           <h3>Change Password</h3>
           <form className="form-grid single-col" onSubmit={updatePassword}>
             <label>
@@ -328,26 +348,34 @@ export default function StudentPortal() {
         </div>
       </section>
 
-      <section className="panel">
-        <h3>Teachers List</h3>
+      <section className="panel student-portal-card">
+        <div className="page-head student-section-head">
+          <h3>Teachers List</h3>
+          <span className="student-hero-pill subtle">Mentors & Faculty</span>
+        </div>
         {loading ? (
-          <p>Loading...</p>
+          <p className="muted">Loading teachers...</p>
+        ) : teachers.length === 0 ? (
+          <p className="muted">No teachers found.</p>
         ) : (
-          <ul className="list">
+          <ul className="list student-teacher-list">
             {teachers.map((teacher) => (
               <li key={`${teacher.username}-${teacher.role}`}>
                 <span>{teacher.name}</span>
-                <span>{teacher.role}</span>
+                <span className="teacher-role-chip">{teacher.role}</span>
               </li>
             ))}
           </ul>
         )}
       </section>
 
-      <section className="panel">
-        <h3>Weekly Timetable</h3>
+      <section className="panel student-portal-card">
+        <div className="page-head student-section-head">
+          <h3>Weekly Timetable</h3>
+          <span className="student-hero-pill subtle">Stay On Track</span>
+        </div>
         <div className="table-wrap">
-          <table>
+          <table className="portal-table">
             <thead>
               <tr>
                 <th>Day</th>
@@ -378,73 +406,68 @@ export default function StudentPortal() {
         </div>
       </section>
 
-      <section className="panel">
-        <h3>Upcoming Exams</h3>
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Scheduled At</th>
-                <th>Duration</th>
-                <th>Negative Marking</th>
-                <th>Questions</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {upcomingExams.length === 0 ? (
-                <tr>
-                  <td className="empty" colSpan={6}>
-                    No upcoming exams.
-                  </td>
-                </tr>
-              ) : (
-                upcomingExams.map((exam) => (
-                  <tr key={exam._id}>
-                    <td>{exam.title}</td>
-                    <td>{formatDateTime(exam.scheduledAt)}</td>
-                    <td>{exam.durationMinutes} mins</td>
-                    <td>{`-${exam.negativeMarkPerWrong}`}</td>
-                    <td>{exam.totalQuestions}</td>
-                    <td>
-                      <button
-                        className="btn small"
-                        disabled={exam.attempted}
-                        onClick={() => startExam(exam._id)}
-                      >
-                        {exam.attempted ? 'Attempted' : 'Start Exam'}
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+      <section className="panel student-portal-card">
+        <div className="page-head student-section-head">
+          <h3>Upcoming Exams</h3>
+          <span className="student-hero-pill subtle">Ready For Challenge</span>
         </div>
+
+        {upcomingExams.length === 0 ? (
+          <p className="muted">No upcoming exams.</p>
+        ) : (
+          <div className="exam-card-grid">
+            {upcomingExams.map((exam) => (
+              <article key={exam._id} className="exam-card">
+                <h4>{exam.title}</h4>
+                <p>{formatDateTime(exam.scheduledAt)}</p>
+                <div className="exam-card-meta">
+                  <span>{exam.durationMinutes} mins</span>
+                  <span>{exam.totalQuestions} questions</span>
+                  <span>{`-${exam.negativeMarkPerWrong} negative`}</span>
+                </div>
+                <button className="btn small" disabled={exam.attempted} onClick={() => startExam(exam._id)}>
+                  {exam.attempted ? 'Attempted' : 'Start Exam'}
+                </button>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
 
       {activeExam ? (
-        <section className="panel">
-          <h3>{activeExam.title}</h3>
-          <p>{activeExam.description}</p>
-          <p>
-            Duration: {activeExam.durationMinutes} mins | Questions: {activeExam.questions.length} | Negative:
-            {` -${activeExam.negativeMarkPerWrong}`}
-          </p>
-          <p className={remainingSeconds < 60 ? 'error-msg' : 'muted'}>
-            Time Remaining: {formatTimer(remainingSeconds)}
-          </p>
+        <section className="panel student-portal-card exam-live-panel">
+          <div className="exam-live-top">
+            <div>
+              <h3>{activeExam.title}</h3>
+              <p>{activeExam.description}</p>
+              <p className="muted">
+                {`Duration: ${activeExam.durationMinutes} mins | Questions: ${activeExam.questions.length} | Negative: -${activeExam.negativeMarkPerWrong}`}
+              </p>
+            </div>
+            <div className="exam-live-status">
+              <p className={remainingSeconds < 60 ? 'error-msg' : 'muted'}>
+                Time Remaining: <strong>{formatTimer(remainingSeconds)}</strong>
+              </p>
+              <p className="muted">Answered: {answeredCount} / {activeExamTotalQuestions}</p>
+            </div>
+          </div>
+
+          <div className="exam-progress-track" aria-hidden="true">
+            <div
+              className="exam-progress-value"
+              style={{ width: `${activeExamTotalQuestions ? (answeredCount / activeExamTotalQuestions) * 100 : 0}%` }}
+            />
+          </div>
 
           <div className="page-stack">
             {activeExam.questions.map((question) => (
-              <div key={question.index} className="panel">
+              <div key={question.index} className="panel exam-question-card">
                 <p>
                   <strong>{`Q${question.index + 1}. ${question.text}`}</strong>
                 </p>
-                <div className="form-grid single-col">
+                <div className="form-grid single-col exam-options-grid">
                   {question.options.map((option, optionIndex) => (
-                    <label key={`${question.index}-${optionIndex}`}>
+                    <label key={`${question.index}-${optionIndex}`} className="exam-option-item">
                       <input
                         type="radio"
                         name={`q-${question.index}`}
@@ -470,53 +493,38 @@ export default function StudentPortal() {
         </section>
       ) : null}
 
-      <section className="panel">
-        <h3>My Exam Attempts</h3>
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Exam</th>
-                <th>Scheduled At</th>
-                <th>Score</th>
-                <th>Submitted At</th>
-                <th>Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              {myAttempts.length === 0 ? (
-                <tr>
-                  <td className="empty" colSpan={5}>
-                    No attempts submitted.
-                  </td>
-                </tr>
-              ) : (
-                myAttempts.map((attempt) => (
-                  <tr key={attempt.id}>
-                    <td>{attempt.examTitle}</td>
-                    <td>{formatDateTime(attempt.scheduledAt)}</td>
-                    <td>{`${attempt.score}/${attempt.maxScore} (${attempt.percentage}%)`}</td>
-                    <td>{formatDateTime(attempt.submittedAt)}</td>
-                    <td>
-                      <button
-                        className="btn small"
-                        onClick={() => viewAttemptAnalytics(attempt.id)}
-                        disabled={loadingAnalyticsId === attempt.id}
-                      >
-                        {loadingAnalyticsId === attempt.id ? 'Loading...' : 'View'}
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+      <section className="panel student-portal-card">
+        <div className="page-head student-section-head">
+          <h3>My Exam Attempts</h3>
+          <span className="student-hero-pill subtle">Performance Timeline</span>
         </div>
+
+        {myAttempts.length === 0 ? (
+          <p className="muted">No attempts submitted.</p>
+        ) : (
+          <div className="attempt-card-grid">
+            {myAttempts.map((attempt) => (
+              <article key={attempt.id} className="attempt-card">
+                <h4>{attempt.examTitle}</h4>
+                <p className="muted">Scheduled: {formatDateTime(attempt.scheduledAt)}</p>
+                <p className="attempt-score">{`${attempt.score}/${attempt.maxScore} (${attempt.percentage}%)`}</p>
+                <p className="muted">Submitted: {formatDateTime(attempt.submittedAt)}</p>
+                <button
+                  className="btn small"
+                  onClick={() => viewAttemptAnalytics(attempt.id)}
+                  disabled={loadingAnalyticsId === attempt.id}
+                >
+                  {loadingAnalyticsId === attempt.id ? 'Loading...' : 'View Details'}
+                </button>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
 
       {selectedAttemptAnalytics ? (
-        <section className="panel">
-          <div className="page-head">
+        <section className="panel student-portal-card">
+          <div className="page-head student-section-head">
             <h3>Attempt Analytics</h3>
             <button className="btn secondary small" onClick={() => setSelectedAttemptAnalytics(null)}>
               Hide Details
@@ -530,7 +538,7 @@ export default function StudentPortal() {
 
           <div className="page-stack">
             {selectedAttemptAnalytics.questionAnalytics.map((question) => (
-              <div key={question.questionIndex} className="panel">
+              <div key={question.questionIndex} className="panel exam-question-card">
                 <p>
                   <strong>{`Q${question.questionIndex + 1}. ${question.questionText}`}</strong>
                 </p>

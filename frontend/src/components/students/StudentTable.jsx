@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import './StudentTable.scss';
 
 export default function StudentTable({ students, courses, batches, onEdit, onDelete, canEdit, canDelete }) {
   const [query, setQuery] = useState('');
@@ -24,14 +25,19 @@ export default function StudentTable({ students, courses, batches, onEdit, onDel
     });
   }, [students, query, examFilter]);
 
+  const resultText = `${filtered.length} of ${students.length} students`;
+
   return (
-    <section className="panel">
+    <section className="panel students-table-panel">
       <div className="table-header">
-        <h2>Students List</h2>
+        <div>
+          <h2>Students List</h2>
+          <p className="muted students-result-note">{resultText}</p>
+        </div>
         <div className="filters-row">
           <input
             className="search"
-            placeholder="Search students"
+            placeholder="Search by name, phone, email, exam"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />
@@ -42,6 +48,9 @@ export default function StudentTable({ students, courses, batches, onEdit, onDel
             <option>Junior Clerk</option>
             <option>Bin Sachivalay</option>
           </select>
+          <button type="button" className="btn secondary" onClick={() => setQuery('')}>
+            Clear Search
+          </button>
         </div>
       </div>
 
@@ -62,7 +71,7 @@ export default function StudentTable({ students, courses, batches, onEdit, onDel
             {filtered.length === 0 ? (
               <tr>
                 <td className="empty" colSpan="7">
-                  No students found.
+                  No students found for current filters.
                 </td>
               </tr>
             ) : (

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './CourseBatchManager.scss';
 
 export default function CourseBatchManager({ courses, batches, addCourse, addBatch }) {
   const [courseForm, setCourseForm] = useState({ name: '', fee: '' });
@@ -24,8 +25,9 @@ export default function CourseBatchManager({ courses, batches, addCourse, addBat
 
   return (
     <div className="split-grid">
-      <section className="panel">
+      <section className="panel section-panel">
         <h2>Courses</h2>
+        <p className="muted">Define courses and fee structures offered by academy.</p>
         <form className="form-grid two-col" onSubmit={submitCourse}>
           <label>
             Course Name
@@ -59,8 +61,9 @@ export default function CourseBatchManager({ courses, batches, addCourse, addBat
         </ul>
       </section>
 
-      <section className="panel">
+      <section className="panel section-panel">
         <h2>Batches</h2>
+        <p className="muted">Assign schedules by mapping each batch to a course.</p>
         <form className="form-grid two-col" onSubmit={submitBatch}>
           <label>
             Batch Name

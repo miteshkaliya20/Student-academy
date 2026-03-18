@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import StudentForm from '../components/students/StudentForm';
 import { useAcademy } from '../hooks/useAcademy';
 import { useAuth } from '../hooks/useAuth';
+import './AddStudent.scss';
 
 export default function AddStudent() {
   const { courses, batches, addStudent } = useAcademy();
@@ -21,15 +22,19 @@ export default function AddStudent() {
       navigate('/students');
     } catch (error) {
       alert(error.response?.data?.message || 'Unable to add student.');
+      throw error;
     } finally {
       setSaving(false);
     }
   }
 
   return (
-    <div className="page-stack">
-      <div className="page-head">
-        <h2>Add Student</h2>
+    <div className="page-stack add-student-modern">
+      <div className="page-head add-student-head panel">
+        <div>
+          <h2>Add Student</h2>
+          <p className="muted">Fill in student profile details to register a new admission record.</p>
+        </div>
         <Link className="btn secondary" to="/students">
           Back to Students
         </Link>
