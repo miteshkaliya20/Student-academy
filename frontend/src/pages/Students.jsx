@@ -11,6 +11,7 @@ export default function Students() {
   const { students, courses, batches, addStudent, updateStudent, deleteStudent } = useAcademy();
   const { user } = useAuth();
   const [editing, setEditing] = useState(null);
+  const [exportingPdf, setExportingPdf] = useState(false);
   const editFormRef = useRef(null);
   const [exportFilters, setExportFilters] = useState({
     courseId: '',
@@ -68,6 +69,7 @@ export default function Students() {
     }
 
     try {
+      setExportingPdf(true);
       const response = await api.get('/students/export/pdf', {
         responseType: 'blob',
         params: {
@@ -76,16 +78,44 @@ export default function Students() {
         },
       });
 
-      const blobUrl = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+      const blob = response.data instanceof Blob
+        ? response.data
+        : new Blob([response.data], { type: 'application/pdf' });
+      const blobUrl = window.URL.createObjectURL(blob);
+      const fallbackFilename = `students-${new Date().toISOString().slice(0, 10)}.pdf`;
+      const contentDisposition = response.headers?.['content-disposition'] || '';
+      const filenameMatch = contentDisposition.match(/filename="?([^";]+)"?/i);
+      const filename = filenameMatch?.[1] || fallbackFilename;
+
       const link = document.createElement('a');
       link.href = blobUrl;
-      link.download = `students-${new Date().toISOString().slice(0, 10)}.pdf`;
+      link.download = filename;
+      link.rel = 'noopener noreferrer';
       document.body.appendChild(link);
       link.click();
       link.remove();
+
+      // iOS Safari may ignore download attribute for blobs; opening in a new tab is a reliable fallback.
+      if (!('download' in HTMLAnchorElement.prototype)) {
+        window.open(blobUrl, '_blank', 'noopener,noreferrer');
+      }
+
       window.URL.revokeObjectURL(blobUrl);
     } catch (error) {
+      try {
+        if (error.response?.data instanceof Blob) {
+          const text = await error.response.data.text();
+          const parsed = JSON.parse(text);
+          alert(parsed?.message || 'Unable to export student PDF.');
+          return;
+        }
+      } catch (_parseError) {
+        // Fall through to generic message when blob parsing fails.
+      }
+
       alert(error.response?.data?.message || 'Unable to export student PDF.');
+    } finally {
+      setExportingPdf(false);
     }
   }
 
@@ -108,8 +138,8 @@ export default function Students() {
         </div>
         {user?.role === 'Admin' ? (
           <div className="actions toolbar-actions">
-            <button className="btn secondary" onClick={handleExportPdf}>
-              Export PDF
+            <button className="btn secondary" onClick={handleExportPdf} disabled={exportingPdf}>
+              {exportingPdf ? 'Exporting...' : 'Export PDF'}
             </button>
             <Link className="btn" to="/students/add">
               Add Student
