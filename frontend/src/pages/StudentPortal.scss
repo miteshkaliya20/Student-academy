@@ -168,6 +168,10 @@
   background: #f1f5f9;
 }
 
+.portal-table {
+  min-width: 560px;
+}
+
 .exam-card-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -346,6 +350,10 @@
     align-items: flex-start;
   }
 
+  .student-hero-actions {
+    width: 100%;
+  }
+
   .student-portal .page-head .actions {
     width: 100%;
     justify-content: stretch;
@@ -376,5 +384,9 @@
   .exam-live-status {
     width: 100%;
     min-width: 0;
+  }
+
+  .exam-option-item {
+    align-items: flex-start;
   }
 }

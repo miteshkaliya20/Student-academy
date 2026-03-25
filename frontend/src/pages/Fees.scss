@@ -1,3 +1,35 @@
 .fees-hero {
   background: linear-gradient(130deg, #14532d 0%, #0f766e 55%, #0f172a 100%);
 }
+
+.fees-page-modern .section-panel h3 {
+  margin-bottom: 0.7rem;
+}
+
+.fees-table {
+  min-width: 640px;
+}
+
+@media (max-width: 980px) {
+  .fees-page-modern .section-panel .form-grid.three-col {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .fees-table {
+    min-width: 620px;
+  }
+}
+
+@media (max-width: 720px) {
+  .fees-page-modern .section-panel .form-grid.three-col {
+    grid-template-columns: 1fr;
+  }
+
+  .fees-page-modern .section-panel .actions {
+    width: 100%;
+  }
+
+  .fees-table {
+    min-width: 560px;
+  }
+}

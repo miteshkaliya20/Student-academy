@@ -181,6 +181,12 @@
   .dashboard-hero {
     flex-direction: column;
     align-items: stretch;
+    padding: 1rem;
+  }
+
+  .dashboard-panel-head {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .dashboard-hero-actions {

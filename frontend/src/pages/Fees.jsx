@@ -57,7 +57,7 @@ export default function Fees() {
   }
 
   return (
-    <div className="page-stack section-page-modern">
+    <div className="page-stack section-page-modern fees-page-modern">
       <section className="panel section-hero fees-hero">
         <div>
           <h2>Fees Management</h2>
@@ -124,7 +124,7 @@ export default function Fees() {
       <section className="panel section-panel">
         <h3>Pending Fees Tracker</h3>
         <div className="table-wrap">
-          <table>
+          <table className="fees-table mobile-cards">
             <thead>
               <tr>
                 <th>Student</th>
@@ -136,10 +136,10 @@ export default function Fees() {
             <tbody>
               {dues.map((item) => (
                 <tr key={item.student.id}>
-                  <td>{item.student.fullName}</td>
-                  <td>₹ {item.totalFee}</td>
-                  <td>₹ {item.paid}</td>
-                  <td>₹ {item.pending}</td>
+                  <td data-label="Student">{item.student.fullName}</td>
+                  <td data-label="Total Fee">₹ {item.totalFee}</td>
+                  <td data-label="Paid">₹ {item.paid}</td>
+                  <td data-label="Pending">₹ {item.pending}</td>
                 </tr>
               ))}
             </tbody>

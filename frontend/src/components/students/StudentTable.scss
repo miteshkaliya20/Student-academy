@@ -1,1 +1,75 @@
-/* StudentTable-specific styles are currently covered by Students page styles and shared table utilities. */
+.students-table-panel .filters-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) auto;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.students-table-panel .table-wrap table {
+	min-width: 940px;
+}
+
+.students-table-panel .row-actions {
+	flex-wrap: wrap;
+}
+
+.students-filter-panel .filters-row {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 0.5rem;
+}
+
+@media (max-width: 980px) {
+	.students-table-panel .filters-row {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.students-table-panel .filters-row .btn {
+		grid-column: 1 / -1;
+		width: 100%;
+	}
+
+	.students-table-panel .table-wrap table {
+		min-width: 860px;
+	}
+
+	.students-filter-panel .filters-row {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.students-filter-panel .filters-row .btn {
+		grid-column: 1 / -1;
+		width: 100%;
+	}
+}
+
+@media (max-width: 720px) {
+	.students-table-panel .filters-row {
+		grid-template-columns: 1fr;
+	}
+
+	.students-table-panel .filters-row .btn {
+		grid-column: auto;
+	}
+
+	.students-table-panel .table-wrap table {
+		min-width: 760px;
+	}
+
+	.students-table-panel .row-actions {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.students-table-panel .row-actions .btn {
+		width: 100%;
+	}
+
+	.students-filter-panel .filters-row {
+		grid-template-columns: 1fr;
+	}
+
+	.students-filter-panel .filters-row .btn {
+		grid-column: auto;
+	}
+}

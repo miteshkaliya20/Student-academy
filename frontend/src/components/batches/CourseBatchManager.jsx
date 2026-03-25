@@ -27,7 +27,7 @@ export default function CourseBatchManager({ courses, batches, addCourse, addBat
     <div className="split-grid">
       <section className="panel section-panel">
         <h2>Courses</h2>
-        <p className="muted">Define courses and fee structures offered by academy.</p>
+        <p className="muted">Define courses and fee structures offered by Academy.</p>
         <form className="form-grid two-col" onSubmit={submitCourse}>
           <label>
             Course Name

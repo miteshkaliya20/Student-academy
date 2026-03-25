@@ -375,7 +375,7 @@ export default function StudentPortal() {
           <span className="student-hero-pill subtle">Stay On Track</span>
         </div>
         <div className="table-wrap">
-          <table className="portal-table">
+          <table className="portal-table mobile-cards">
             <thead>
               <tr>
                 <th>Day</th>
@@ -394,10 +394,10 @@ export default function StudentPortal() {
               ) : (
                 timetable.map((row) => (
                   <tr key={row._id}>
-                    <td>{row.day}</td>
-                    <td>{`${row.startTime} - ${row.endTime}`}</td>
-                    <td>{row.subject}</td>
-                    <td>{row.teacherName}</td>
+                    <td data-label="Day">{row.day}</td>
+                    <td data-label="Time">{`${row.startTime} - ${row.endTime}`}</td>
+                    <td data-label="Subject">{row.subject}</td>
+                    <td data-label="Teacher">{row.teacherName}</td>
                   </tr>
                 ))
               )}

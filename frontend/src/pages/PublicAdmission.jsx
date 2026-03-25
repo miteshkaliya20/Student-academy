@@ -170,7 +170,7 @@ export default function PublicAdmission() {
             </div>
             <div>
               <strong>3. Submit Request</strong>
-              <span>Receive confirmation and follow-up from academy staff.</span>
+              <span>Receive confirmation and follow-up from Academy staff.</span>
             </div>
           </div>
         </article>

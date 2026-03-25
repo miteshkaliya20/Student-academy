@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import StudentForm from '../components/students/StudentForm';
 import StudentTable from '../components/students/StudentTable';
@@ -11,10 +11,19 @@ export default function Students() {
   const { students, courses, batches, addStudent, updateStudent, deleteStudent } = useAcademy();
   const { user } = useAuth();
   const [editing, setEditing] = useState(null);
+  const editFormRef = useRef(null);
   const [exportFilters, setExportFilters] = useState({
     courseId: '',
     batchId: '',
   });
+
+  useEffect(() => {
+    if (!editing || !editFormRef.current) {
+      return;
+    }
+
+    editFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [editing]);
 
   const studentInsights = useMemo(() => {
     const withEmail = students.filter((student) => student.email).length;
@@ -171,13 +180,15 @@ export default function Students() {
         </section>
       ) : null}
       {editing ? (
-        <StudentForm
-          onSubmit={handleSubmit}
-          courses={courses}
-          batches={batches}
-          editStudent={editing}
-          onCancelEdit={() => setEditing(null)}
-        />
+        <div ref={editFormRef}>
+          <StudentForm
+            onSubmit={handleSubmit}
+            courses={courses}
+            batches={batches}
+            editStudent={editing}
+            onCancelEdit={() => setEditing(null)}
+          />
+        </div>
       ) : null}
       <StudentTable
         students={students}

@@ -75,7 +75,7 @@ export default function Login() {
         <article className="login-card academy-auth-card academy-auth-modern">
           <div className="academy-auth-top">
             <h2>Staff / Admin Login</h2>
-            <p>Secure access for academy operations dashboard.</p>
+            <p>Secure access for Academy operations dashboard.</p>
           </div>
 
           <div className="demo-login-row">

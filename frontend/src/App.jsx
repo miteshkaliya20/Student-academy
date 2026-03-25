@@ -1,4 +1,5 @@
-import { BrowserRouter, Link, Navigate, NavLink, Outlet, Route, Routes } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { BrowserRouter, Link, Navigate, NavLink, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import './App.scss';
 import Dashboard from './pages/Dashboard';
 import Students from './pages/Students';
@@ -27,18 +28,87 @@ const navItems = [
 function Layout() {
   const { user, logout } = useAuth();
   const isAdmin = user?.role === 'Admin';
+  const location = useLocation();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const touchStartXRef = useRef(null);
+  const touchStartYRef = useRef(null);
+
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [location.pathname]);
 
   if (!user) {
     return <Navigate to="/login" replace />;
   }
 
+  function handleLogout() {
+    setIsSidebarOpen(false);
+    logout();
+  }
+
+  function handleTouchStart(event) {
+    if (event.touches.length !== 1) {
+      touchStartXRef.current = null;
+      touchStartYRef.current = null;
+      return;
+    }
+
+    const touch = event.touches[0];
+    touchStartXRef.current = touch.clientX;
+    touchStartYRef.current = touch.clientY;
+  }
+
+  function handleTouchEnd(event) {
+    if (touchStartXRef.current == null || touchStartYRef.current == null || event.changedTouches.length !== 1) {
+      return;
+    }
+
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - touchStartXRef.current;
+    const deltaY = touch.clientY - touchStartYRef.current;
+    const horizontalMove = Math.abs(deltaX);
+    const verticalMove = Math.abs(deltaY);
+    const isHorizontalSwipe = horizontalMove > 60 && horizontalMove > verticalMove * 1.4;
+
+    if (!isHorizontalSwipe) {
+      touchStartXRef.current = null;
+      touchStartYRef.current = null;
+      return;
+    }
+
+    const startedNearLeftEdge = touchStartXRef.current < 36;
+
+    if (!isSidebarOpen && deltaX > 0 && startedNearLeftEdge) {
+      setIsSidebarOpen(true);
+    }
+
+    if (isSidebarOpen && deltaX < 0) {
+      setIsSidebarOpen(false);
+    }
+
+    touchStartXRef.current = null;
+    touchStartYRef.current = null;
+  }
+
   return (
-    <div className="layout">
-      <aside className="sidebar">
+    <div
+      className={`layout ${isSidebarOpen ? 'sidebar-open' : ''}`}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
+      <aside className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-top">
           <Link to="/dashboard" className="brand-link">
             <h1>Parivartan Academy</h1>
           </Link>
+          <button
+            className="mobile-close-btn"
+            type="button"
+            onClick={() => setIsSidebarOpen(false)}
+            aria-label="Close menu"
+          >
+            Close
+          </button>
           <p className="sidebar-subtitle">Admin & Student Operations</p>
         </div>
 
@@ -55,17 +125,34 @@ function Layout() {
                 key={item.path}
                 className={({ isActive }) => `nav-btn ${isActive ? 'active' : ''}`}
                 to={item.path}
+                onClick={() => setIsSidebarOpen(false)}
               >
                 <span className="nav-btn-tag">{item.tag}</span>
                 <span>{item.label}</span>
               </NavLink>
             ))}
         </nav>
-        <button className="btn secondary logout" onClick={logout}>
+        <button className="btn secondary logout" onClick={handleLogout}>
           Logout
         </button>
       </aside>
+      {isSidebarOpen ? (
+        <button
+          className="sidebar-backdrop"
+          type="button"
+          onClick={() => setIsSidebarOpen(false)}
+          aria-label="Close sidebar"
+        />
+      ) : null}
       <section className="content">
+        <div className="mobile-topbar">
+          <button className="mobile-menu-btn" type="button" onClick={() => setIsSidebarOpen(true)}>
+            Menu
+          </button>
+          <Link to="/dashboard" className="mobile-brand-link">
+            Parivartan Academy
+          </Link>
+        </div>
         <div className="content-shell">
           <Outlet />
         </div>

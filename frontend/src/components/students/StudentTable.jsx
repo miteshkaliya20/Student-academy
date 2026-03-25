@@ -55,7 +55,7 @@ export default function StudentTable({ students, courses, batches, onEdit, onDel
       </div>
 
       <div className="table-wrap">
-        <table>
+        <table className="mobile-cards">
           <thead>
             <tr>
               <th>Photo</th>
@@ -77,22 +77,22 @@ export default function StudentTable({ students, courses, batches, onEdit, onDel
             ) : (
               filtered.map((student) => (
                 <tr key={student.id}>
-                  <td>
+                  <td data-label="Photo">
                     {student.photo ? (
                       <img src={student.photo} alt={student.fullName} className="avatar" />
                     ) : (
                       <div className="avatar placeholder">NA</div>
                     )}
                   </td>
-                  <td>{student.fullName}</td>
-                  <td>
+                  <td data-label="Name">{student.fullName}</td>
+                  <td data-label="Contact">
                     {student.phone}
                     <div className="sub-cell">{student.email || '-'}</div>
                   </td>
-                  <td>{student.examType}</td>
-                  <td>{student.courseId ? courseMap[student.courseId] || '-' : '-'}</td>
-                  <td>{student.batchId ? batchMap[student.batchId] || '-' : '-'}</td>
-                  <td className="row-actions">
+                  <td data-label="Exam">{student.examType}</td>
+                  <td data-label="Course">{student.courseId ? courseMap[student.courseId] || '-' : '-'}</td>
+                  <td data-label="Batch">{student.batchId ? batchMap[student.batchId] || '-' : '-'}</td>
+                  <td className="row-actions" data-label="Actions">
                     <button
                       className="btn small"
                       onClick={() => onEdit(student)}

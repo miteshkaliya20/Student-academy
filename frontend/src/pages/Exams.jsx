@@ -51,7 +51,7 @@ export default function Exams() {
   }
 
   return (
-    <div className="page-stack section-page-modern">
+    <div className="page-stack section-page-modern exams-page-modern">
       <section className="panel section-hero exams-hero">
         <div>
           <h2>Exam Tracking</h2>
@@ -142,7 +142,7 @@ export default function Exams() {
       <section className="panel section-panel">
         <h3>Performance Report</h3>
         <div className="table-wrap">
-          <table>
+          <table className="exams-table mobile-cards">
             <thead>
               <tr>
                 <th>Student</th>
@@ -163,12 +163,12 @@ export default function Exams() {
               ) : (
                 examRecords.map((record) => (
                   <tr key={record.id}>
-                    <td>{studentMap[record.studentId] || '-'}</td>
-                    <td>{record.testName}</td>
-                    <td>{record.examDate}</td>
-                    <td>{record.score}</td>
-                    <td>{record.attendance}</td>
-                    <td>{record.remarks || '-'}</td>
+                    <td data-label="Student">{studentMap[record.studentId] || '-'}</td>
+                    <td data-label="Test">{record.testName}</td>
+                    <td data-label="Date">{record.examDate}</td>
+                    <td data-label="Score">{record.score}</td>
+                    <td data-label="Attendance">{record.attendance}</td>
+                    <td data-label="Remarks">{record.remarks || '-'}</td>
                   </tr>
                 ))
               )}

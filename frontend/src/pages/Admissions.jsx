@@ -156,7 +156,7 @@ export default function Admissions() {
       {error ? <div className="error-msg">{error}</div> : null}
 
       <section className="panel section-panel table-wrap">
-        <table>
+        <table className="mobile-cards">
           <thead>
             <tr>
               <th>Name</th>
@@ -179,21 +179,21 @@ export default function Admissions() {
             ) : (
               filteredAdmissions.map((item) => (
                 <tr key={item._id}>
-                  <td>{`${item.firstName} ${item.lastName}`}</td>
-                  <td>{item.email}</td>
-                  <td>{item.phone}</td>
-                  <td>
+                  <td data-label="Name">{`${item.firstName} ${item.lastName}`}</td>
+                  <td data-label="Email">{item.email}</td>
+                  <td data-label="Phone">{item.phone}</td>
+                  <td data-label="Profile Pic">
                     <a href={toFileUrl(item.profilePic)} target="_blank" rel="noreferrer">
                       View
                     </a>
                   </td>
-                  <td>
+                  <td data-label="ID Proof">
                     <a href={toFileUrl(item.idProof)} target="_blank" rel="noreferrer">
                       View
                     </a>
                   </td>
-                  <td>{formatDate(item.createdAt)}</td>
-                  <td>
+                  <td data-label="Submitted">{formatDate(item.createdAt)}</td>
+                  <td data-label="Status">
                     <select
                       value={item.status}
                       onChange={(event) => handleStatusChange(item._id, event.target.value)}
@@ -206,7 +206,7 @@ export default function Admissions() {
                       ))}
                     </select>
                   </td>
-                  <td>
+                  <td data-label="Convert">
                     {item.convertedStudent ? (
                       <span className="muted">Converted</span>
                     ) : (

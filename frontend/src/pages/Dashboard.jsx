@@ -119,7 +119,7 @@ export default function Dashboard() {
           <p>
             {isAdmin
               ? 'Track admissions, fee movement, and exam readiness from one control center.'
-              : 'Monitor day-to-day academy operations with quick read-only operational insights.'}
+              : 'Monitor day-to-day Academy operations with quick read-only operational insights.'}
           </p>
         </div>
       </section>
